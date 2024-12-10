@@ -1,0 +1,205 @@
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Avanza');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Rush');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Kijang Innova');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Fortuner');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Corolla Altis');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Camry');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Yaris');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Vios');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Alphard');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Vellfire');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Raize');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Hilux');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Toyota', 'Supra GR');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'Brio');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'Mobilio');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'BR-V');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'HR-V');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'CR-V');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'Civic');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'City');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'Accord');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Honda', 'WR-V');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Nissan', 'Livina');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Nissan', 'X-Trail');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Nissan', 'Serena');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Nissan', 'Kicks e-Power');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Nissan', 'Magnite');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Nissan', 'Navara');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mitsubishi', 'Xpander');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mitsubishi', 'Pajero Sport');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mitsubishi', 'Outlander PHEV');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mitsubishi', 'Triton');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mitsubishi', 'Eclipse Cross');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Suzuki', 'Ertiga');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Suzuki', 'XL7');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Suzuki', 'Karimun Wagon R');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Suzuki', 'Ignis');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Suzuki', 'Baleno');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Suzuki', 'SX4 S-Cross');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Suzuki', 'Carry');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Daihatsu', 'Ayla');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Daihatsu', 'Sigra');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Daihatsu', 'Xenia');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Daihatsu', 'Terios');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Daihatsu', 'Rocky');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Daihatsu', 'Gran Max');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Daihatsu', 'Luxio');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mazda', 'Mazda 2');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mazda', 'Mazda 3');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mazda', 'Mazda 6');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mazda', 'CX-3');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mazda', 'CX-5');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mazda', 'CX-8');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mazda', 'CX-9');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mazda', 'BT-50');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Subaru', 'XV');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Subaru', 'Forester');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Subaru', 'Outback');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Subaru', 'BRZ');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Isuzu', 'Panther (sudah tidak diproduksi)');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Isuzu', 'MU-X');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Isuzu', 'D-Max');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Isuzu', 'Traga');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Lexus', 'UX');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Lexus', 'NX');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Lexus', 'RX');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Lexus', 'GX');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Lexus', 'LX');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Lexus', 'ES');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Lexus', 'LS');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Lexus', 'LC');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Hyundai', 'Ioniq 5');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Hyundai', 'Palisade');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Hyundai', 'Santa Fe');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Hyundai', 'Creta');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Hyundai', 'Stargazer');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Hyundai', 'Tucson');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Hyundai', 'Kona Electric');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Kia', 'Sonet');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Kia', 'Seltos');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Kia', 'Sportage');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Kia', 'Sorento');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Kia', 'Carnival');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Kia', 'Picanto');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Kia', 'Rio');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('BMW', 'Seri 3');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('BMW', 'Seri 5');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('BMW', 'Seri 7');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('BMW', 'X1');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('BMW', 'X3');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('BMW', 'X5');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('BMW', 'X7');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('BMW', 'iX3 (model listrik)');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'A-Class');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'C-Class');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'E-Class');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'S-Class');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'GLA');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'GLC');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'GLE');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'GLS');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Mercedes-Benz', 'EQC (model listrik)');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'A3');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'A4');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'A6');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'A8');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'Q3');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'Q5');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'Q7');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'Q8');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Audi', 'e-tron (model listrik)');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volkswagen', 'Polo');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volkswagen', 'Golf');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volkswagen', 'Tiguan Allspace');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volkswagen', 'T-Cross');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volkswagen', 'Passat');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volkswagen', 'Touareg');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Peugeot', '2008');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Peugeot', '3008');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Peugeot', '5008');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Peugeot', '508');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Renault', 'Triber');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Renault', 'Koleos');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Renault', 'Kwid');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Renault', 'Duster');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volvo', 'XC40');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volvo', 'XC60');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volvo', 'XC90');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Volvo', 'S90');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Land Rover', 'Range Rover');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Land Rover', 'Range Rover Evoque');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Land Rover', 'Discovery Sport');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Land Rover', 'Defender');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MINI', 'MINI 3-Door');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MINI', 'MINI 5-Door');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MINI', 'MINI Convertible');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MINI', 'MINI Clubman');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MINI', 'MINI Countryman');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Porsche', '911');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Porsche', 'Cayenne');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Porsche', 'Macan');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Porsche', 'Panamera');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Porsche', 'Taycan (model listrik)');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Ford', 'Everest');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Ford', 'Ranger');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Chevrolet', 'Trailblazer (sudah tidak dipasarkan)');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Chevrolet', 'Captiva (sudah tidak dipasarkan)');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Chevrolet', 'Colorado (sudah tidak dipasarkan)');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Jeep', 'Wrangler');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Jeep', 'Gladiator');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Jeep', 'Compass');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Jeep', 'Grand Cherokee');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Tesla', 'Model 3');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Tesla', 'Model S');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Tesla', 'Model X');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Tesla', 'Model Y');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Wuling', 'Confero');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Wuling', 'Cortez');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Wuling', 'Almaz');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Wuling', 'Alvez');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Wuling', 'Air EV (model listrik)');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Chery', 'Tiggo 4 Pro');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Chery', 'Tiggo 7 Pro');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Chery', 'Tiggo 8 Pro');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Chery', 'Omoda 5');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('DFSK', 'Glory 560');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('DFSK', 'Glory i-Auto');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('DFSK', 'Gelora (model komersial)');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MG', 'MG ZS');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MG', 'MG HS');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MG', 'MG 5 GT');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('MG', 'MG 4 EV (model listrik)');
+
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Proton', 'X70');
+INSERT INTO `carhub`.`vehicle_model` (`brand`, `model`) VALUES ('Proton', 'X50');
