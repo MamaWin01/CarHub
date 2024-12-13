@@ -1,0 +1,171 @@
+.filter-container {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    max-width: 320px;
+}
+
+.filter-group {
+    margin-bottom: 1.5rem;
+}
+
+.scrollable {
+    max-height: 150px;
+    overflow-y: auto;
+    /* border: 1px solid #ddd; */
+    padding: 5px;
+    border-radius: 4px;
+}
+
+/* Webkit Browsers */
+.scrollable::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Track background color */
+    border-radius: 5px; /* Track corner rounding */
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background-color: #888; /* Thumb color */
+    border-radius: 5px; /* Thumb corner rounding */
+    border: 2px solid #f0f0f0; /* Adds padding around the thumb */
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Thumb color on hover */
+}
+
+/* Button kondisi kendaraan */
+/* Basic styles for buttons */
+#filter-buttons .btn-filter {
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Active button style */
+#filter-buttons .btn-filter.active {
+    background-color: #000000;
+    color: white;
+    border-color: white;
+}
+
+/* Icon style */
+#filter-buttons .icon {
+    font-weight: bold;
+}
+
+#filter-buttons .btn-filter:hover {
+    background-color: #000000;
+    color: #fff;
+}
+
+/* Change the default accent color for checkboxes */
+input[type="checkbox"]:checked {
+    accent-color: black;
+}
+
+/* Optional: Style the checkbox container */
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* order button */
+#order-buttons .btn-order {
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Active button style */
+#order-buttons .btn-order.active {
+    background-color: #000000;
+    color: white;
+    border-color: white;
+}
+
+#order-buttons .icon {
+    font-weight: bold;
+}
+
+#order-buttons .btn-order:hover {
+    background-color: #000000;
+    color: #fff;
+}
+
+/* Search input styles */
+.search-icon {
+    position: absolute;
+    top: 1.1%;
+    left: 23.5%; /* Adjust left position as needed */
+    transform: translateY(-50%);
+    color: #999; /* Adjust color as needed */
+    pointer-events: none;
+}
+
+.search-input {
+    display: flex;
+    align-items: center;
+}
+
+/* for pagination */
+#pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination-btn {
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 8px 12px;
+    font-size: 16px; /* Adjust button font size */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination-btn:hover:not(.active) {
+    background-color: #000000;
+    color: #fff;
+}
+
+.pagination-btn.active {
+    background-color: #000000;
+    color: #fff;
+    font-weight: bold;
+    pointer-events: none; /* Disable click on the active button */
+}
+
+.pagination-btn:disabled {
+    background-color: #dcdcdc;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.pagination-btn.prev-page,
+.pagination-btn.next-page {
+    font-size: 15px; /* Bigger arrow icons */
+    font-weight: bold;
+}
