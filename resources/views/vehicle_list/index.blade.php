@@ -168,7 +168,7 @@
 
                     <!-- Tipe body -->
                     <div class="filter-group">
-                        <h5>Tipe mobil</h5>
+                        <h5>Tipe Mobil</h5>
                         <div class="scrollable">
                             <div class="form-check">
                                 <input class="form-check-input" checked type="checkbox" value="all" id="bodyType-all" onclick="clickFunction('all','bodyType',this)">
@@ -406,6 +406,19 @@
         console.log('bodyType =' + bodyType);
         console.log('model =' + model);
         console.log('currentPage =' + currentPage);
+
+        document.getElementById('carList').innerHTML = `
+            <div id="skeleton-loader">
+                @for ($i=0;$i<12;$i++)
+                    <div class="skeleton-card">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text skeleton-title"></div>
+                        <div class="skeleton-text skeleton-subtitle"></div>
+                        <div class="skeleton-text skeleton-price"></div>
+                    </div>
+                @endfor
+            </div>
+        `;
 
         $.ajax({
             url: "{{ route('vehicle_list.show', 'getVehicleList') }}",

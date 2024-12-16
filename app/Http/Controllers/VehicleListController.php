@@ -32,7 +32,7 @@ class VehicleListController extends Controller
             'colour' => explode(',', $config['warna']),
             'body_type' => explode(',', $config['tipe_mobil']),
         ];
-
+        // dd(Auth()->check());
         return view('vehicle_list.index')->with($filters);
     }
 

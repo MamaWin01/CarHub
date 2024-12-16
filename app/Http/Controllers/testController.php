@@ -88,6 +88,7 @@ class testController extends Controller
             ]);
 
             DB::table('rating')->insert([
+                'created_at' => date('Y-m-d H:i:s'),
                 'user_id' => $u->id,
                 'user_name' => $u->name,
                 'vehicle_id' => $id,

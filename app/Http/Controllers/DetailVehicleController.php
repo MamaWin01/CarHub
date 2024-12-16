@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use DB;
-use App\Models\{Vehicle,Config,VehicleModel};
+use App\Models\{Vehicle,Config,VehicleModel,Rating, Wishlist};
 
 class DetailVehicleController extends Controller
 {
@@ -20,8 +20,43 @@ class DetailVehicleController extends Controller
         if($request->action) {
             return $this->showModel($request, $id);
         }
-        // dd($request->all(), $id);
-        return view('vehicle_detail.index');
+
+        $config = Config::whereIn('name', ['kondisi', 'merek', 'warna', 'transmisi', 'jenis_bahan_bakar', 'tipe_mobil'])->get();
+        $tempArr = [];
+        foreach($config as $i) {
+            $tempArr[$i->name] = $i->value;
+        }
+        $config = $tempArr;
+        $filters = [
+            'condition' => explode(',', $config['kondisi']),
+            'transmision' => explode(',', $config['transmisi']),
+            'fuel_type' => explode(',', $config['jenis_bahan_bakar']),
+            'colour' => explode(',', $config['warna']),
+            'body_type' => explode(',', $config['tipe_mobil']),
+        ];
+
+        $vehicle = Vehicle::where('id', $id)->first();
+
+        if(Auth()->check()) {
+            $user = Rating::where('user_id', Auth()->user()->id)
+                        ->where('vehicle_id', $vehicle->id)
+                        ->first();
+
+            $is_in_wishlist = Wishlist::where([
+                    'user_id' => Auth()->user()->id,
+                    'vehicle_id' => $id
+                ])->first();
+        } else {
+            $user = [];
+            $is_in_wishlist = [];
+        }
+
+        $userRating = !@$user->rating ? 0 : $user->rating;
+        $userReview = !@$user->content ? '' : $user->content;
+
+        $reviews = Rating::where('vehicle_id', $vehicle->id)->take(3)->orderBy('created_at', 'desc')->get();
+
+        return view('vehicle_detail.index', compact('vehicle','userRating', 'userReview', 'reviews', 'is_in_wishlist', 'filters'));
     }
 
     private function showModel($request, $id)

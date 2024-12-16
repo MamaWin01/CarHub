@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{DetailVehicleController, testController, VehicleListController};
+use App\Http\Controllers\{UsersController, DetailVehicleController, testController, VehicleListController, RatingController, WishlistController};
 
 /*s
 |--------------------------------------------------------------------------
@@ -19,10 +19,13 @@ use App\Http\Controllers\{DetailVehicleController, testController, VehicleListCo
 // });
 
 Route::redirect('/', '/vehicle_list');
+Route::redirect('/dashboard', '/vehicle_list');
 Route::get('test', [testController::class, 'test']);
 Route::get('generateRandData', [testController::class, 'generateRandData']);
-Route::get('login');
-Route::get('register');
+Route::post('login', [UsersController::class, 'login'])->name('user.login');
+Route::post('logout', [UsersController::class, 'logout'])->name('user.logout');
+Route::post('register', [UsersController::class, 'register'])->name('user.register');
+
 // list kendaraan
 Route::get('vehicle_list', [VehicleListController::class, 'index'])->name('vehicle_list.index');
 Route::get('getVehicleList', [VehicleListController::class, 'show'])->name('vehicle_list.show');
@@ -30,6 +33,8 @@ Route::get('getBrandModel', [VehicleListController::class, 'getBrandModel'])->na
 
 // detail kendaraan
 Route::get('vehicle_detail/{id}', [DetailVehicleController::class, 'show'])->name('vehicle_detail.show');
+Route::post('rating/{id}', [RatingController::class, 'show'])->middleware('auth')->name('vehicle_detail.rating');
+Route::post('wishlist/{id}', [WishlistController::class, 'show'])->middleware('auth')->name('vehicle_detail.wishlist');
 
 Route::get('list/{id}');
 Route::get('wishlist');

@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class UserId extends Model
+class UserId extends Authenticatable
 {
     use HasFactory;
 
@@ -14,5 +15,16 @@ class UserId extends Model
     protected $primaryKey = 'id';
 
     public $timestamps = false;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
 }
