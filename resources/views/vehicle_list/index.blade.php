@@ -375,11 +375,13 @@
         } else {
             minPrice = value;
         }
-        if((Number(maxPrice) >= Number(minPrice)) && !isNaN(value)) {
+        if((Number(maxPrice) >= Number(minPrice)) && !isNaN(value) && name == 'max') {
             disableInput(priceInput, true);
             getCarList();
         } else {
-            disableInput(priceInput, false);
+            if(Number(maxPrice) < Number(minPrice)) {
+                disableInput(priceInput, false);
+            }
         }
     }
 
@@ -408,7 +410,7 @@
 
         document.getElementById('carList').innerHTML = `
             <div id="skeleton-loader">
-                @for ($i=0;$i<12;$i++)
+                @for ($i=0;$i<18;$i++)
                     <div class="skeleton-card">
                         <div class="skeleton-image"></div>
                         <div class="skeleton-text skeleton-title"></div>
@@ -437,6 +439,9 @@
                 year: year,
                 from: from,
                 to: to,
+                kilometer: kilometer,
+                minRange: minRange,
+                maxRange: maxRange,
                 bodyType: bodyType,
                 model: model,
                 page: currentPage
@@ -526,12 +531,26 @@
         if(element != null) {
             if(name == 'status') {
                 if (element.checked) {
-                    (value === 'jual') ? jual = 1 : sewa = 1;
+                    if(value == 'jual') {
+                        jual = 1;
+                    } else if (value == 'sewa') {
+                        sewa = 1;
+                    }
                 } else {
-                    (value === 'sewa') ? jual = 0 : sewa = 0;
+                    if(value == 'jual') {
+                        jual = 0;
+                    } else if (value == 'sewa') {
+                        sewa = 0;
+                    }
                 }
-                status = (jual && sewa) ? 0 : (!sewa ? 1 : 2);
-                if(jual == 0 && sewa == 0) {
+
+                if(jual == 1 && sewa == 1) {
+                    status = 0;
+                } else if(sewa == 1) {
+                    status = 2;
+                } else if(jual == 1) {
+                    status = 1;
+                } else {
                     status = 0;
                 }
             } else if(name == 'brand') {
