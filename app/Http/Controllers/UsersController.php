@@ -97,4 +97,35 @@ class UsersController extends Controller
 
         return redirect('/')->with('success', 'Anda telah berhasil logout!');
     }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'photo' => 'nullable|image|max:2048',
+            'current_password' => 'nullable|min:6',
+            'new_password' => 'nullable|min:6|confirmed',
+        ]);
+
+        $user = Auth::user();
+        dd($request->all());
+
+        // Update name
+        $user->name = $request->name;
+
+        // Handle profile photo upload
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('profile_photos', 'public');
+            $user->photo = $path;
+        }
+
+        // Update password if current_password and new_password are provided
+        if ($request->filled('current_password') && Hash::check($request->current_password, $user->password)) {
+            $user->password = Hash::make($request->new_password);
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully!');
+    }
 }

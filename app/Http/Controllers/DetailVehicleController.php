@@ -29,9 +29,7 @@ class DetailVehicleController extends Controller
         $config = $tempArr;
         $filters = [
             'condition' => explode(',', $config['kondisi']),
-            'transmision' => explode(',', $config['transmisi']),
             'fuel_type' => explode(',', $config['jenis_bahan_bakar']),
-            'colour' => explode(',', $config['warna']),
             'body_type' => explode(',', $config['tipe_mobil']),
         ];
 

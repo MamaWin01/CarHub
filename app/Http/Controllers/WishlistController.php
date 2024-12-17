@@ -15,6 +15,45 @@ class WishlistController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function index(Request $request)
+    {
+        if($request->action) {
+            if($request->orderby == 'baru') {
+                $order = 'desc';
+                $by = 'datetime';
+            } elseif($request->orderby == 'harga-termahal') {
+                $order = 'desc';
+                $by = 'price';
+            } elseif($request->orderby == 'harga-termurah') {
+                $order = 'asc';
+                $by = 'price';
+            } else {
+                $order = 'desc';
+                $by = 'total_rating';
+            }
+
+            $wishlist = Wishlist::from('wishlist as w')
+                            ->leftjoin('vehicle as v', 'v.id', 'w.vehicle_id')
+                            ->where('w.user_id', Auth()->user()->id)
+                            ->selectRaw('v.*, (select avg(r.rating) from rating as r where r.vehicle_id = v.id) as total_rating')
+                            ->orderby($by, $order);
+
+            if($request->search != null) {
+                $wishlist = $wishlist->where('name', 'like', $request->search.'%');
+            }
+
+            $totalPages = round(count($wishlist->get()) / 9) < 1 ? 1: round(count($wishlist->get()) / 9);
+
+            $wishlist = $wishlist->take(9)->offset(9*($request->page-1))->get();
+            return response()->json([
+                'wishlist' => view('wishlist.list', compact('wishlist'))->render(),
+                'totalPages' => $totalPages,
+            ]);
+        }
+
+        return view('wishlist.index');
+    }
+
     public function show(Request $request, $id)
     {
         if($request->wishlist) {

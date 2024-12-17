@@ -5,6 +5,24 @@
     <!-- Bootstrap Bundle JS (includes Popper.js) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <style>
+        /* Dropdown item custom hover effect */
+        .header-button {
+            background-color: transparent; /* Default transparent */
+            color: black; /* Default text color */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            border: none; /* Remove border from buttons */
+            width: 100%; /* Ensure the button spans the entire dropdown width */
+            text-align: left; /* Align text to the left */
+        }
+
+        /* Override Bootstrap dropdown item hover effect */
+        .dropdown-item.header-button:hover {
+            background-color: black !important; /* Background black on hover */
+            color: white !important; /* Text white on hover */
+        }
+    </style>
+
     <div class="container py-2">
         <div class="d-flex justify-content-between align-items-center">
             <!-- Logo -->
@@ -17,8 +35,8 @@
             <!-- Navigation -->
             <nav class="d-flex align-items-center">
                 <a href="{{ route('vehicle_list.index') }}" class="text-decoration-none mx-3 text-dark">List Mobil</a>
-                <a href="#" class="text-decoration-none mx-3 text-dark">Wishlist</a>
-                <a href="#" class="text-decoration-none mx-3 text-dark">Chat</a>
+                <a href="#" onclick="buttonFunction('{{ route('wishlist.getlist') }}')" class="text-decoration-none mx-3 text-dark">Wishlist</a>
+                <a href="#" onclick="buttonFunction('{{ route('chat.index') }}')" class="text-decoration-none mx-3 text-dark">Chat</a>
 
                 <!-- Authentication -->
                 @guest
@@ -31,13 +49,11 @@
                         </a>
                         <ul class="dropdown-menu" style="padding-bottom:0px">
                             <li>
+                                <button type="button" class="dropdown-item header-button">Edit Profile</button>
+                                <button type="button" class="dropdown-item header-button">MyList</button>
                                 <form method="POST" action="{{ route('user.logout') }}">
                                     @csrf
-                                    <button type="submit" class="dropdown-item">Edit Profile</button>
-                                </form>
-                                <form method="POST" action="{{ route('user.logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">Logout</button>
+                                    <button type="submit" class="dropdown-item header-button">Logout</button>
                                 </form>
                             </li>
                         </ul>
@@ -53,7 +69,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -95,7 +111,6 @@
 </div>
 
 <!-- Login Modal -->
-<!-- Login Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -134,6 +149,57 @@
     </div>
 </div>
 
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
+                    <!-- Profile Picture -->
+                    <div class="text-center mb-3">
+                        <label for="profilePhoto">
+                            <img src="{{ asset('images/logo.jpg') }}"
+                                 id="profilePreview"
+                                 class="rounded-circle"
+                                 style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;">
+                        </label>
+                        <input type="file" class="d-none" id="profilePhoto" name="photo" accept="image/*">
+                    </div>
+
+                    <!-- Name Field -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ Auth::user()->name }}" required>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="mb-3">
+                        <label for="current-password" class="form-label">Password</label>
+                        <small class="text-muted d-block">Diperlukan jika ingin ganti password</small>
+                        <input type="password" class="form-control" id="current-password" name="current_password">
+                    </div>
+
+                    <!-- New Password Field -->
+                    <div class="mb-3">
+                        <label for="new-password" class="form-label">Password Baru</label>
+                        <small class="text-muted d-block">Diperlukan jika ingin ganti password</small>
+                        <input type="password" class="form-control" id="new-password" name="new_password" disabled>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-dark w-100">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     @if ($errors->any())
@@ -161,5 +227,51 @@
             loginModal.hide();
             registerModal.show();
         });
+
+        // Show Edit Profile Modal
+        const editProfileButton = document.querySelector('.header-button');
+        editProfileButton.addEventListener('click', function () {
+            var editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+            editProfileModal.show();
+        });
+
+        // Enable "Password Baru" field if "Password" is filled
+        const currentPasswordField = document.getElementById("current-password");
+        const newPasswordField = document.getElementById("new-password");
+
+        currentPasswordField.addEventListener("input", function () {
+            if (currentPasswordField.value.length > 0) {
+                newPasswordField.removeAttribute("disabled");
+            } else {
+                newPasswordField.setAttribute("disabled", "true");
+                newPasswordField.value = ""; // Clear new password field
+            }
+        });
+
+        // Image Preview Logic
+        const profilePhotoInput = document.getElementById("profilePhoto");
+        const profilePreview = document.getElementById("profilePreview");
+
+        profilePhotoInput.addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profilePreview.src = e.target.result; // Update the image preview
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     });
+
+    function buttonFunction(route) {
+        if (!{{ Auth::check() ? 'true' : 'false' }}) {
+            // Redirect to the login modal
+            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+            return; // Stop execution
+        } else {
+            window.location.href = route;
+        }
+    }
 </script>

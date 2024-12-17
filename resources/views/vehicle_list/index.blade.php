@@ -95,7 +95,7 @@
                         <h5>Transmisi</h5>
                         @foreach ($transmision as $key => $trans)
                             <div class="form-check">
-                                <input class="form-check-input" checked type="checkbox" value="{{ $key }}" id="{{ $trans }}" onclick="clickFunction('{{ $key }}','transmision',this)">
+                                <input class="form-check-input" checked type="checkbox" value="{{ $key }}" onclick="clickFunction('{{ $key }}','transmision',this)">
                                 <label class="form-check-label" for="{{ $trans }}">{{ ucfirst($trans) }}</label>
                             </div>
                         @endforeach
@@ -294,20 +294,19 @@
         });
 
         $('#search-box').on('input',function(e){
-            if(loop == 0) {
-                setTimeout(() => {
-                    search = document.getElementById('search-box').value;
-                    getCarList();
-                }, 3000);
-                console.log('a');
-                loop += 1;
-            } else {
-                console.log('b');
+            if(loop > 1) {
                 if(loop > 3) {
                     loop = 0;
                 } else {
                     loop += 1;
                 }
+                setTimeout(() => {
+                    search = document.getElementById('search-box').value;
+                    getCarList();
+                }, 1000);
+            } else {
+                loop += 1;
+                getCarList();
             }
         });
 
@@ -453,7 +452,6 @@
             }
         });
     }
-
 
     function renderPagination() {
         const paginationContainer = document.getElementById('pagination');

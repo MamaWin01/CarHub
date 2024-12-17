@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="{{ asset('css/vehicle_list_model.css') }}">
 
 <div class="row">
-    @forelse ($vehicle as $car)
+    @forelse ($wishlist as $car)
         <div class="col-md-4 mb-4">
             <div class="card" onclick="openModel({{ @$car->id }})">
                 <img src="{{ asset('images/logo.jpg') }}" class="card-img-top" alt="Car Image">
