@@ -171,8 +171,8 @@ class VehicleListController extends Controller
             $vehicle = $vehicle->whereIn('body_type', []);
         }
 
-        $totalPages = round(count($vehicle->get()) / 3) < 1 ? 1 : round(count($vehicle->get()) / 3);
-        $vehicle = $vehicle->take(3)->offset(3*($request->page-1))->get();
+        $totalPages = round(count($vehicle->get()) / 18) < 1 ? 1 : round(count($vehicle->get()) / 18);
+        $vehicle = $vehicle->take(18)->offset(18*($request->page-1))->get();
 
         if(count($vehicle) < 0) {
             $vehicle = [];

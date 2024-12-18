@@ -43,14 +43,14 @@
                     <button class="btn btn-outline-secondary mx-2" data-bs-toggle="modal" data-bs-target="#registerModal">Daftar</button>
                     <button class="btn btn-dark mx-2" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
                 @else
-                    <div class="dropdown">
+                    <div class="dropdown mx-3">
                         <a href="#" class="dropdown-toggle text-decoration-none text-dark" data-bs-toggle="dropdown">
                             {{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu" style="padding-bottom:0px">
                             <li>
                                 <button type="button" class="dropdown-item header-button">Edit Profile</button>
-                                <button type="button" class="dropdown-item header-button">MyList</button>
+                                <button type="button" onclick="window.location='{{ route("mylist.index") }}'" class="dropdown-item header-button">MyList</button>
                                 <form method="POST" action="{{ route('user.logout') }}">
                                     @csrf
                                     <button type="submit" class="dropdown-item header-button">Logout</button>
@@ -69,7 +69,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <h5 class="modal-title" id="registerModalLabel">Register</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -150,56 +150,73 @@
 </div>
 
 <!-- Edit Profile Modal -->
-<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-
-                    <!-- Profile Picture -->
-                    <div class="text-center mb-3">
-                        <label for="profilePhoto">
-                            <img src="{{ asset('images/logo.jpg') }}"
-                                 id="profilePreview"
-                                 class="rounded-circle"
-                                 style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;">
-                        </label>
-                        <input type="file" class="d-none" id="profilePhoto" name="photo" accept="image/*">
+@guest
+@else
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 10px; right: 10px;"></button>
+                </div>
+                @if (session('update-success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-
-                    <!-- Name Field -->
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ Auth::user()->name }}" required>
+                @endif
+                @if (session('update-error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                @endif
+                <div class="modal-body">
+                    <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px !important; right: 10px !important;"></button>
+                    <form method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
 
-                    <!-- Password Field -->
-                    <div class="mb-3">
-                        <label for="current-password" class="form-label">Password</label>
-                        <small class="text-muted d-block">Diperlukan jika ingin ganti password</small>
-                        <input type="password" class="form-control" id="current-password" name="current_password">
-                    </div>
+                        <!-- Profile Picture -->
+                        <div class="text-center mb-3">
+                            <label for="profilePhoto">
+                                <img src="{{ asset('storage/images/profile_photos/' . Auth::user()->id . '_' . Auth::user()->name . '.png') }}"
+                                    id="profilePreview"
+                                    class="rounded-circle"
+                                    style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;">
+                            </label>
+                            <input type="file" class="d-none" id="profilePhoto" name="photo" accept="image/*">
+                        </div>
 
-                    <!-- New Password Field -->
-                    <div class="mb-3">
-                        <label for="new-password" class="form-label">Password Baru</label>
-                        <small class="text-muted d-block">Diperlukan jika ingin ganti password</small>
-                        <input type="password" class="form-control" id="new-password" name="new_password" disabled>
-                    </div>
+                        <!-- Name Field -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ Auth()->check() ? Auth::user()->name : '' }}" required>
+                        </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-dark w-100">Update</button>
-                </form>
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="current-password" class="form-label">Password</label>
+                            <small class="text-muted d-block">Jika ingin mengganti password</small>
+                            <input type="password" class="form-control" id="current-password" name="current_password">
+                        </div>
+
+                        <!-- New Password Field -->
+                        <div class="mb-3">
+                            <label for="new-password" class="form-label">Password Baru</label>
+                            <small class="text-muted d-block">Jika ingin mengganti password</small>
+                            <input type="password" class="form-control" id="new-password" name="new_password" disabled>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-dark w-100">Update</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endguest
+
 
 <script>
     @if ($errors->any())
@@ -262,6 +279,25 @@
                 reader.readAsDataURL(file);
             }
         });
+
+        @if (session('update-success') || session('update-error'))
+            var editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+            editProfileModal.show();
+            setTimeout(function () {
+                const successAlert = document.getElementById('successAlert');
+                const errorAlert = document.getElementById('errorAlert');
+
+                if (successAlert) {
+                    let alertInstance = bootstrap.Alert.getOrCreateInstance(successAlert);
+                    alertInstance.close();
+                }
+
+                if (errorAlert) {
+                    let alertInstance = bootstrap.Alert.getOrCreateInstance(errorAlert);
+                    alertInstance.close();
+                }
+            }, 5000);
+        @endif
     });
 
     function buttonFunction(route) {

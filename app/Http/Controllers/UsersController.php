@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Models\UserId;
 
 class UsersController extends Controller
@@ -100,32 +101,69 @@ class UsersController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'photo' => 'nullable|image|max:2048',
-            'current_password' => 'nullable|min:6',
-            'new_password' => 'nullable|min:6|confirmed',
-        ]);
+        try {
+            $user = Auth::user();
 
-        $user = Auth::user();
-        dd($request->all());
+            // Validation
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'photo' => 'nullable|image',
+                'current_password' => 'nullable|min:6',
+                'new_password' => 'nullable|min:6|confirmed',
+            ]);
 
-        // Update name
-        $user->name = $request->name;
+            if (!$user) {
+                return back()->with('error', 'You are not logged in.');
+            }
 
-        // Handle profile photo upload
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('profile_photos', 'public');
-            $user->photo = $path;
+            // Update name
+            $oldName = $user->name;
+            $user->name = $request->name;
+
+            // Handle profile photo upload
+            if ($request->hasFile('photo')) {
+                if ($oldName != $request->name) {
+                    $name = $request->name;
+                } else {
+                    $name = $user->name;
+                }
+
+                // Upload new photo
+                $path = $request->file('photo')->storeAs(
+                    'images/profile_photos',
+                    $user->id . '_' . $name . '.png',
+                    'public'
+                );
+
+                // Delete the old file if the name changed
+                if ($oldName != $request->name) {
+                    $oldPath = 'images/profile_photos/' . $user->id . '_' . $oldName . '.png';
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    }
+                }
+            } else {
+                // Rename the file if only the name changes and no new file is uploaded
+                if ($oldName != $request->name) {
+                    $oldPath = 'images/profile_photos/' . $user->id . '_' . $oldName . '.png';
+                    $newPath = 'images/profile_photos/' . $user->id . '_' . $request->name . '.png';
+
+                    if (Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->move($oldPath, $newPath);
+                    }
+                }
+            }
+
+            // Update password if required
+            if ($request->filled('current_password') && Hash::check($request->current_password, $user->password)) {
+                $user->password = Hash::make($request->new_password);
+            }
+
+            $user->save();
+
+            return back()->with('update-success', 'Profile updated successfully!');
+        } catch (\Exception $e) {
+            return back()->with('update-error', $e->getMessage());
         }
-
-        // Update password if current_password and new_password are provided
-        if ($request->filled('current_password') && Hash::check($request->current_password, $user->password)) {
-            $user->password = Hash::make($request->new_password);
-        }
-
-        $user->save();
-
-        return back()->with('success', 'Profile updated successfully!');
     }
 }

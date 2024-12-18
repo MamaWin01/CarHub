@@ -4,7 +4,7 @@
     @forelse ($wishlist as $car)
         <div class="col-md-4 mb-4">
             <div class="card" onclick="openModel({{ @$car->id }})">
-                <img src="{{ asset('images/logo.jpg') }}" class="card-img-top" alt="Car Image">
+                <img src="{{ asset('images/not_found.jpg') }}" class="card-img-top" alt="Car Image">
                 <div class="card-body">
                     <h5 class="card-title">{{ $car->name }}</h5>
                     <p class="card-text">
@@ -45,10 +45,16 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close-modal-btn" onclick="closeModel()">×</button>
-                <h4><b><span id="modalName"></span></b></h4>
-                <p><span id="modalSeller" style="color:darkgray"></span></p>
-                <img src="{{ asset('images/logo.jpg') }}" alt="Vehicle Image" class="img-fluid" id="modalImage">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h4 class="mb-0"><b id="modalName">Nama Mobil</b></h4>
+                        <p><span id="modalSeller" style="color:darkgray"></span></p>
+                    </div>
+                    <button type="button" class="btn-close" aria-label="Close" onclick="closeModel()"></button>
+                </div>
+                <div class="text-center">
+                    <img src="{{ asset('images/not_found.jpg') }}" alt="Vehicle Image" class="img-fluid" style="width:425px" id="modalImage">
+                </div>
                 <div class="rating" style="padding-top:10px">
                     <h5>Rating</h5>
                     <div id="rating-star">
@@ -70,7 +76,7 @@
             // Update modal content
             document.getElementById('modalName').textContent = vehicle.name;
             document.getElementById('modalSeller').textContent = vehicle.owner_name;
-            document.getElementById('modalImage').src = "{{ asset('images/logo.jpg') }}";
+            document.getElementById('modalImage').src = "{{ asset('images/not_found.jpg') }}";
 
             // Display star rating based on the vehicle's rating
             const rating = vehicle.rating; // Example: 4.5
