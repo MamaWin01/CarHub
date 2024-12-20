@@ -93,9 +93,9 @@
                     <!-- Transmisi -->
                     <div class="filter-group">
                         <h5>Transmisi</h5>
-                        @foreach ($transmision as $key => $trans)
+                        @foreach ($transmission as $key => $trans)
                             <div class="form-check">
-                                <input class="form-check-input" checked type="checkbox" value="{{ $key }}" onclick="clickFunction('{{ $key }}','transmision',this)">
+                                <input class="form-check-input" checked type="checkbox" value="{{ $key }}" onclick="clickFunction('{{ $key }}','transmission',this)">
                                 <label class="form-check-label" for="{{ $trans }}">{{ ucfirst($trans) }}</label>
                             </div>
                         @endforeach
@@ -160,9 +160,9 @@
                             </select>
                         </div>
                         <div class="d-flex gap-2">
-                            <input type="text" class="form-control year-input" placeholder="minRange" oninput="formatKilometer(this, 'minRange')">
+                            <input type="text" class="form-control year-input" placeholder="Minimal" oninput="formatKilometer(this, 'minRange')">
                             <div style="padding-right:5px;padding-left:5px;font-size:18px">Sampai</div>
-                            <input type="text" class="form-control year-input" placeholder="maxRange" oninput="formatKilometer(this, 'maxRange')">
+                            <input type="text" class="form-control year-input" placeholder="Maksimal" oninput="formatKilometer(this, 'maxRange')">
                         </div>
                     </div>
 
@@ -231,7 +231,7 @@
     var maxPrice = 0;
     var status = 0;
     var brand = ['all'];
-    var transmision = [0,1,2,3];
+    var transmission = [0,1,2,3];
     var fuel = [0,1,2,3];
     var colour = ['all'];
     var from = 0;
@@ -395,7 +395,7 @@
         console.log('maxPrice =' + maxPrice);
         console.log('status =' + status);
         console.log('brand =' + brand);
-        console.log('transmision =' + transmision);
+        console.log('transmission =' + transmission);
         console.log('fuel =' + fuel);
         console.log('colour =' + colour);
         console.log('year =' + year);
@@ -433,7 +433,7 @@
                 maxPrice: maxPrice,
                 status: status,
                 brand: brand,
-                transmision: transmision,
+                transmission: transmission,
                 fuel: fuel,
                 colour: colour,
                 year: year,
@@ -576,11 +576,11 @@
                         "&brand="+brand
                     );
                 }
-            } else if(name == 'transmision') {
+            } else if(name == 'transmission') {
                 if (element.checked) {
-                    transmision.push(value);
+                    transmission.push(value);
                 } else {
-                    transmision = transmision.filter(item => item != value);
+                    transmission = transmission.filter(item => item != value);
                 }
             } else if(name == 'fuel') {
                 if (element.checked) {
@@ -667,13 +667,12 @@
         }
 
         if (name == 'from') {
-            console.log(tempval);
             from = tempval;
         } else {
             to = tempval;
         }
 
-        if (!isNaN(to) && !isNaN(from) && (Number(to) >= Number(from))) {
+        if ((Number(to) >= Number(from)) && !isNaN(tempval) && name == 'from') {
             disableInput(yearInput, true);
             getCarList();
         } else {
@@ -701,7 +700,7 @@
         } else {
             minRange = value;
         }
-        if((Number(maxRange) >= Number(minRange)) && !isNaN(value)) {
+        if((Number(maxRange) >= Number(minRange)) && !isNaN(value) && name == 'maxRange') {
             disableInput(kilometerInput, true);
             getCarList();
         } else {

@@ -4,12 +4,16 @@
     @forelse ($wishlist as $car)
         <div class="col-md-4 mb-4">
             <div class="card" onclick="openModel({{ @$car->id }})">
-                <img src="{{ asset('images/not_found.jpg') }}" class="card-img-top" alt="Car Image">
+            @php
+                $vehiclePath = 'storage/images/vehicles/' . $car->owner_id . '_' . @$car->id . '.png';
+                $defaultImage = asset('images/not_found.jpg');
+            @endphp
+            <img src="{{ file_exists(public_path($vehiclePath)) ? asset($vehiclePath) : $defaultImage }}" class="card-img-top" alt="Car Image">
                 <div class="card-body">
                     <h5 class="card-title">{{ $car->name }}</h5>
                     <p class="card-text">
-                        Tahun: {{ $car->year }} <br>
-                        {{ $car->kilometer }} KM - {{ $car->type }} <br>
+                        {{ $car->year }} -
+                        {{ $car->kilometer }} KM -
                         @if($car->status == 0)
                             Dijual/Disewa
                         @elseif ($car->status == 1)
@@ -76,7 +80,7 @@
             // Update modal content
             document.getElementById('modalName').textContent = vehicle.name;
             document.getElementById('modalSeller').textContent = vehicle.owner_name;
-            document.getElementById('modalImage').src = "{{ asset('images/not_found.jpg') }}";
+            document.getElementById('modalImage').src = vehicle.image;
 
             // Display star rating based on the vehicle's rating
             const rating = vehicle.rating; // Example: 4.5

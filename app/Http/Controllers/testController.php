@@ -57,7 +57,7 @@ class testController extends Controller
         $filters = [
             'brands' => explode(',', $config['merek']),
             'model' => [],
-            'transmision' => explode(',', $config['transmisi']),
+            'transmission' => explode(',', $config['transmisi']),
             'fuel_type' => explode(',', $config['jenis_bahan_bakar']),
             'colour' => explode(',', $config['warna']),
             'body_type' => explode(',', $config['tipe_mobil']),
@@ -79,7 +79,7 @@ class testController extends Controller
                 'price' => rand(1000000,5000000),
                 'brand' => $brand,
                 'model' => $model[rand(0, count($tempArr) -1)],
-                'transmision' => $filters['transmision'][rand(0, 3)],
+                'transmission' => $filters['transmission'][rand(0, 3)],
                 'fuel_type' => rand(0,3),
                 'colour' => $filters['colour'][rand(0, 13)],
                 'year' => rand(2019,2025),

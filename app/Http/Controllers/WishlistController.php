@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use DB;
-use App\Models\{Vehicle,Config,Wishlist};
+use App\Models\{Vehicle,Config,Wishlist,Chat};
 
 class WishlistController extends Controller
 {
@@ -17,6 +17,12 @@ class WishlistController extends Controller
 
     public function index(Request $request)
     {
+        if(!Auth()->check()) {
+            return redirect()->route('vehicle_list.index');
+        }
+
+        $unread_count = Chat::where('user_id', Auth()->user()->id)->select('unread_count')->first()->unread_count;
+
         if($request->action) {
             if($request->orderby == 'baru') {
                 $order = 'desc';
@@ -51,10 +57,10 @@ class WishlistController extends Controller
             ]);
         }
 
-        return view('wishlist.index');
+        return view('wishlist.index', compact('unread_count'));
     }
 
-    public function show(Request $request, $id)
+    public function store(Request $request, $id)
     {
         if($request->wishlist) {
             $wishlist = Wishlist::insert([

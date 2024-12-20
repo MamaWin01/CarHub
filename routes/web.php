@@ -40,6 +40,7 @@ Route::get('getBrandModel', [VehicleListController::class, 'getBrandModel'])->na
 // detail kendaraan
 Route::get('vehicle/vehicle_detail/{id}', [DetailVehicleController::class, 'show'])->name('vehicle_detail.show');
 Route::post('vehicle/rating/{id}', [RatingController::class, 'show'])->middleware('auth')->name('vehicle_detail.rating');
+Route::delete('/vehicle/{id}/rating', [RatingController::class, 'destroy'])->name('vehicle_detail.deleteRating');
 Route::post('vehicle/wishlist/{id}', [WishlistController::class, 'store'])->middleware('auth')->name('vehicle_detail.wishlist');
 
 // wishlist
@@ -47,6 +48,13 @@ Route::get('user/wishlist', [WishlistController::class, 'index'])->name('wishlis
 
 // chat
 Route::get('user/chat', [ChatController::class, 'index'])->name('chat.index');
+// Route::post('user/send', [ChatController::class, 'send'])->name('chat.send');
+// Route::post('user/receive', [ChatController::class, 'receive'])->name('chat.receive');
+Route::post('user/chat/getChat', [ChatController::class, 'show'])->name('chat.getChat');
+Route::get('user/chat/channels', [ChatController::class, 'fetchChannels'])->name('chat.getChannels');
 
 // myList
 Route::get('user/mylist', [MyListController::class, 'index'])->name('mylist.index');
+Route::post('user/mylist/store', [MyListController::class, 'store'])->name('mylist.store');
+Route::put('/vehicle/update/{id}', [MyListController::class, 'update'])->name('vehicle.update');
+Route::delete('/vehicle/delete/{id}', [MyListController::class, 'destroy'])->name('vehicle.delete');

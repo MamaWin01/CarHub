@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use DB;
-use App\Models\{Vehicle,Config,VehicleModel};
+use App\Models\{Vehicle,Config,VehicleModel,Chat};
 
 class VehicleListController extends Controller
 {
@@ -27,18 +27,27 @@ class VehicleListController extends Controller
         $filters = [
             'brands' => explode(',', $config['merek']),
             'model' => [],
-            'transmision' => explode(',', $config['transmisi']),
+            'transmission' => explode(',', $config['transmisi']),
             'fuel_type' => explode(',', $config['jenis_bahan_bakar']),
             'colour' => explode(',', $config['warna']),
             'body_type' => explode(',', $config['tipe_mobil']),
         ];
+
+        if(Auth()->check()) {
+            $unread_count = Chat::where('user_id', Auth()->user()->id)->select('unread_count')->first()->unread_count;
+        } else {
+            $unread_count = 0;
+        }
         // dd(Auth()->check());
-        return view('vehicle_list.index')->with($filters);
+        return view('vehicle_list.index', compact('unread_count'))->with($filters);
     }
 
     public function show(Request $request)
     {
-        $reqTransmission = $request->transmision ?: [];
+        $reqTransmission = $request->transmission ?: [];
+        $reqBrand = $request->brand ?: [];
+        $reqModel = $request->model ?: [];
+        $reqColour = $request->colour ?: [];
         $config = Config::whereIn('name', ['kondisi','merek', 'warna', 'transmisi', 'jenis_bahan_bakar', 'tipe_mobil'])->get();
         $tempArr = [];
         foreach($config as $i) {
@@ -53,11 +62,11 @@ class VehicleListController extends Controller
             }
         }
 
-        $transmision = explode(',',$config['transmisi']);
+        $transmission = explode(',',$config['transmisi']);
         $ArrTrans = [];
         foreach($reqTransmission as $trans) {
             if(isset($trans)) {
-                $ArrTrans[] = $transmision[$trans];
+                $ArrTrans[] = $transmission[$trans];
             }
         }
 
@@ -84,7 +93,7 @@ class VehicleListController extends Controller
         $vehicle = Vehicle::selectRaw('vehicle.*, (select avg(r.rating) from rating as r where r.vehicle_id = vehicle.id) as total_rating')
                             ->whereIn('condition', $ArrCond)
                             ->whereIn('fuel_type', $fuel)
-                            ->whereIn('transmision', $ArrTrans)
+                            ->whereIn('transmission', $ArrTrans)
                             ->orderby($by, $order);
 
         if($request->price != 'all' && ($request->maxPrice <= $request->minPrice)) {
@@ -104,8 +113,8 @@ class VehicleListController extends Controller
             }
         }
 
-        if($request->year != 'all' && $request->year > 0 && ($request->to < $request->from)) {
-            if(($request->from == 0 && $request->to == 0)) {
+        if($request->year != 'all' && $request->year > 0 && ($request->to <= $request->from)) {
+            if(($request->from == 0 || $request->to == 0)) {
                 $vehicle = $vehicle->where('year', $request->year);
             }
         } else {
@@ -141,7 +150,14 @@ class VehicleListController extends Controller
 
         if($request->brand) {
             if(!in_array('all', $request->brand)) {
-                $vehicle = $vehicle->whereIn('brand', $request->brand);
+                $vehicleBrand = explode(',',$config['merek']);
+                $ArrBrand = [];
+                foreach($reqBrand as $brand) {
+                    if(isset($brand)) {
+                        $ArrBrand[] = $vehicleBrand[$brand];
+                    }
+                }
+                $vehicle = $vehicle->whereIn('brand', $ArrBrand);
             }
         } else {
             $vehicle = $vehicle->whereIn('brand', []);
@@ -149,7 +165,12 @@ class VehicleListController extends Controller
 
         if($request->model) {
             if(!in_array('all', $request->model)) {
-                $vehicle = $vehicle->whereIn('model', $request->model);
+                $vehicleModel = VehicleModel::whereIn('id', $reqModel)->select('model')->get();
+                $ArrModel = [];
+                foreach($vehicleModel as $model) {
+                    $ArrModel[] = $model->model;
+                }
+                $vehicle = $vehicle->whereIn('model', $ArrModel);
             }
         } else {
             $vehicle = $vehicle->whereIn('model', []);
@@ -157,7 +178,14 @@ class VehicleListController extends Controller
 
         if($request->colour) {
             if(!in_array('all', $request->colour)) {
-                $vehicle = $vehicle->whereIn('colour', $request->colour);
+                $vehicleColour = explode(',',$config['warna']);
+                $ArrColour = [];
+                foreach($reqColour as $colour) {
+                    if(isset($colour)) {
+                        $ArrColour[] = $vehicleColour[$colour];
+                    }
+                }
+                $vehicle = $vehicle->whereIn('colour', $ArrColour);
             }
         } else {
             $vehicle = $vehicle->whereIn('colour', []);

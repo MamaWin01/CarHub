@@ -21,6 +21,19 @@
             background-color: black !important; /* Background black on hover */
             color: white !important; /* Text white on hover */
         }
+
+        .unread-count {
+            display: inline-block;
+            background-color: red;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 30%;
+            width: 15px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+        }
     </style>
 
     <div class="container py-2">
@@ -36,7 +49,13 @@
             <nav class="d-flex align-items-center">
                 <a href="{{ route('vehicle_list.index') }}" class="text-decoration-none mx-3 text-dark">List Mobil</a>
                 <a href="#" onclick="buttonFunction('{{ route('wishlist.getlist') }}')" class="text-decoration-none mx-3 text-dark">Wishlist</a>
-                <a href="#" onclick="buttonFunction('{{ route('chat.index') }}')" class="text-decoration-none mx-3 text-dark">Chat</a>
+                <a href="#" onclick="buttonFunction('{{ route('chat.index') }}')" class="text-decoration-none mx-3 text-dark">Chat
+                    @if (Auth()->check())
+                        @if ($unread_count > 0)
+                            <small class="unread-count" id="unreadHeader">{{ $unread_count }}</small>
+                        @endif
+                    @endif
+                </a>
 
                 <!-- Authentication -->
                 @guest
@@ -68,11 +87,12 @@
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            {{-- <div class="modal-header">
                 <h5 class="modal-title" id="registerModalLabel">Register</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+            </div> --}}
             <div class="modal-body">
+                <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px !important; right: 10px !important;"></button>
                 <form method="POST" action="{{ route('user.register') }}">
                     @csrf
                     <div class="mb-3">
@@ -114,11 +134,12 @@
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            {{-- <div class="modal-header">
                 <h5 class="modal-title" id="loginModalLabel">Login</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+            </div> --}}
             <div class="modal-body">
+                <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px !important; right: 10px !important;"></button>
                 <form method="POST" action="{{ route('user.login') }}">
                     @csrf
                     <div class="mb-3">
@@ -155,20 +176,20 @@
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                {{-- <div class="modal-header">
                     <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 10px; right: 10px;"></button>
-                </div>
+                </div> --}}
                 @if (session('update-success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {{ session('update-success') }}
+                        {{-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> --}}
                     </div>
                 @endif
                 @if (session('update-error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {{ session('update-error') }}
+                        {{-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> --}}
                     </div>
                 @endif
                 <div class="modal-body">
@@ -180,7 +201,11 @@
                         <!-- Profile Picture -->
                         <div class="text-center mb-3">
                             <label for="profilePhoto">
-                                <img src="{{ asset('storage/images/profile_photos/' . Auth::user()->id . '_' . Auth::user()->name . '.png') }}"
+                                @php
+                                    $profilePath = 'storage/images/profile_photos/' . Auth::user()->id . '_' . Auth::user()->name . '.png';
+                                    $defaultImage = asset('images/not_found.jpg');
+                                @endphp
+                                <img src="{{ file_exists(public_path($profilePath)) ? asset($profilePath) : $defaultImage }}"
                                     id="profilePreview"
                                     class="rounded-circle"
                                     style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;">
@@ -245,42 +270,43 @@
             registerModal.show();
         });
 
-        // Show Edit Profile Modal
-        const editProfileButton = document.querySelector('.header-button');
-        editProfileButton.addEventListener('click', function () {
-            var editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
-            editProfileModal.show();
-        });
+        @if(Auth()->check())
+            const editProfileButton = document.querySelector('.header-button');
+            editProfileButton.addEventListener('click', function () {
+                var editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+                editProfileModal.show();
+            });
 
-        // Enable "Password Baru" field if "Password" is filled
-        const currentPasswordField = document.getElementById("current-password");
-        const newPasswordField = document.getElementById("new-password");
+            // Enable "Password Baru" field if "Password" is filled
+            const currentPasswordField = document.getElementById("current-password");
+            const newPasswordField = document.getElementById("new-password");
 
-        currentPasswordField.addEventListener("input", function () {
-            if (currentPasswordField.value.length > 0) {
-                newPasswordField.removeAttribute("disabled");
-            } else {
-                newPasswordField.setAttribute("disabled", "true");
-                newPasswordField.value = ""; // Clear new password field
-            }
-        });
+            currentPasswordField.addEventListener("input", function () {
+                if (currentPasswordField.value.length > 0) {
+                    newPasswordField.removeAttribute("disabled");
+                } else {
+                    newPasswordField.setAttribute("disabled", "true");
+                    newPasswordField.value = ""; // Clear new password field
+                }
+            });
 
-        // Image Preview Logic
-        const profilePhotoInput = document.getElementById("profilePhoto");
-        const profilePreview = document.getElementById("profilePreview");
+            // Image Preview Logic
+            const profilePhotoInput = document.getElementById("profilePhoto");
+            const profilePreview = document.getElementById("profilePreview");
 
-        profilePhotoInput.addEventListener("change", function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    profilePreview.src = e.target.result; // Update the image preview
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+            profilePhotoInput.addEventListener("change", function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        profilePreview.src = e.target.result; // Update the image preview
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        @endif
 
-        @if (session('update-success') || session('update-error'))
+        @if ((session('update-success') || session('update-error')) && Auth()->check())
             var editProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
             editProfileModal.show();
             setTimeout(function () {

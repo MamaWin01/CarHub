@@ -7,9 +7,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\UserId;
+use App\Services\StreamChatService;
 
 class UsersController extends Controller
 {
+    private $streamChat;
+
+    public function __construct(StreamChatService $streamChat)
+    {
+        $this->streamChat = $streamChat;
+    }
+
     /**
      * Handle login request.
      */
@@ -76,7 +84,9 @@ class UsersController extends Controller
             // Log in the user after registration
             Auth::login($user);
 
-            return redirect('/vehicle_list')->with('success', 'Registrasi berhasil! Selamat datang, ' . $user->name . '.');
+            $this->streamChat->createUser(strval($user->id), $request->name, $request->email);
+
+            return redirect('/vehicle/vehicle_list')->with('success', 'Registrasi berhasil! Selamat datang, ' . $user->name . '.');
         } catch (\Exception $e) {
             // Log the exception if necessary (optional)
             // \Log::error('Registration Error: ' . $e->getMessage());
@@ -110,6 +120,12 @@ class UsersController extends Controller
                 'photo' => 'nullable|image',
                 'current_password' => 'nullable|min:6',
                 'new_password' => 'nullable|min:6|confirmed',
+            ], [
+                'name.required' => 'Nama wajib diisi.',
+                'name.string' => 'Nama harus berupa teks.',
+                'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+                'new_password.min' => 'Password minimal harus :min karakter.',
+                'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
             ]);
 
             if (!$user) {
@@ -161,7 +177,7 @@ class UsersController extends Controller
 
             $user->save();
 
-            return back()->with('update-success', 'Profile updated successfully!');
+            return back()->with('update-success', 'Profile berhasil di update!');
         } catch (\Exception $e) {
             return back()->with('update-error', $e->getMessage());
         }

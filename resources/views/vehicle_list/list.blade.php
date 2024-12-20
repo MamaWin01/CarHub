@@ -3,13 +3,17 @@
 <div class="row">
     @forelse ($vehicle as $car)
         <div class="col-md-4 mb-4">
-            <div class="card" onclick="openModel({{ @$car->id }})">
-                <img src="{{ asset('images/not_found.jpg') }}" class="card-img-top" alt="Car Image">
+            <div class="card" onclick="openModel({{ @$car->id }},{{ $car->owner_id }})">
+                @php
+                    $vehiclePath = 'storage/images/vehicles/' . $car->owner_id . '_' . @$car->id . '.png';
+                    $defaultImage = asset('images/not_found.jpg');
+                @endphp
+                <img src="{{ file_exists(public_path($vehiclePath)) ? asset($vehiclePath) : $defaultImage }}" class="card-img-top" alt="Car Image">
                 <div class="card-body">
                     <h5 class="card-title">{{ $car->name }}</h5>
                     <p class="card-text">
-                        Tahun: {{ $car->year }} <br>
-                        {{ $car->kilometer }} KM - {{ $car->type }} <br>
+                        {{ $car->year }} -
+                        {{ $car->kilometer }} KM -
                         @if($car->status == 0)
                             Dijual/Disewa
                         @elseif ($car->status == 1)
@@ -62,7 +66,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center" style="padding-top:15px;">
-                    <button type="button" style="width:150px" class="btn btn-dark mx-2" id="redirectToButton">Chat</button>
+                    <button type="button" style="width:150px" class="btn btn-dark mx-2" id="chatButton" onclick="gotoChat()">Chat</button>
                     <button type="button" style="width:150px" class="btn btn-secondary mx-2" onclick="redirectTo({{ @$car->id }})" id="detailButton">Detail</button>
                 </div>
             </div>
@@ -71,12 +75,18 @@
 </div>
 
 <script>
-    function openModel(id) {
+    function openModel(id,ownerId) {
+        owner_id = ownerId;
+        if(owner_id == {{ !Auth()->check() ? 0 : Auth()->user()->id }}) {
+            document.getElementById('chatButton').disabled = true;
+        } else {
+            document.getElementById('chatButton').disabled = false;
+        }
         fetchVehicleDetails(id).then(vehicle => {
             // Update modal content
             document.getElementById('modalName').textContent = vehicle.name;
             document.getElementById('modalSeller').textContent = vehicle.owner_name;
-            document.getElementById('modalImage').src = "{{ asset('images/not_found.jpg') }}";
+            document.getElementById('modalImage').src = vehicle.image;
 
             // Display star rating based on the vehicle's rating
             const rating = vehicle.rating; // Example: 4.5
@@ -150,6 +160,15 @@
 
     function redirectTo(id) {
         window.location.href = "{{ route('vehicle_detail.show', ':id') }}".replace(':id', id);
+    }
+
+    function gotoChat() {
+        if({{Auth()->check() ? 1 : 0}}) {
+            var data = "action=autoload&owner_id="+owner_id;
+            window.location.href = "{{ route('chat.index', ':data') }}".replace(':data', data);
+        } else {
+            document.getElementById('chatButton').disabled = true;
+        }
     }
 </script>
 

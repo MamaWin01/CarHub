@@ -45,4 +45,14 @@ class RatingController extends Controller
 
         return redirect()->back();
     }
+
+    public function Destroy($id)
+    {
+        $user = Auth()->user();
+
+        Rating::where('user_id', $user->id)->where('vehicle_id', $id)->delete();
+
+        return back()->with('success', 'Rating dan ulasan berhasil dihapus.');
+    }
+
 }
