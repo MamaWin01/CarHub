@@ -5,7 +5,7 @@
         <div class="col-md-4 mb-4">
             <div class="card" onclick="openModel({{ @$car->id }})">
             @php
-                $vehiclePath = 'storage/images/vehicles/' . $car->owner_id . '_' . @$car->id . '.png';
+                $vehiclePath = 'storage/images/vehicles/'.$car->owner_id . '_' . @$car->id .'/'. $car->owner_id . '_' . @$car->id . '_1.png';
                 $defaultImage = asset('images/not_found.jpg');
             @endphp
             <img src="{{ file_exists(public_path($vehiclePath)) ? asset($vehiclePath) : $defaultImage }}" class="card-img-top" alt="Car Image">
@@ -56,8 +56,10 @@
                     </div>
                     <button type="button" class="btn-close" aria-label="Close" onclick="closeModel()"></button>
                 </div>
-                <div class="text-center">
+                <div class="text-center position-relative">
+                    <button class="btn btn-light position-absolute start-0 top-50 translate-middle-y" id="prevImage" onclick="changeImage(-1)">❮</button>
                     <img src="{{ asset('images/not_found.jpg') }}" alt="Vehicle Image" class="img-fluid" style="width:425px" id="modalImage">
+                    <button class="btn btn-light position-absolute end-0 top-50 translate-middle-y" id="nextImage" onclick="changeImage(1)">❯</button>
                 </div>
                 <div class="rating" style="padding-top:10px">
                     <h5>Rating</h5>
@@ -66,63 +68,89 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center" style="padding-top:15px;">
-                    <button type="button" style="width:150px" class="btn btn-dark mx-2" id="redirectToButton">Chat</button>
+                    <button type="button" style="width:150px" class="btn btn-dark mx-2" id="chatButton" onclick="gotoChat()">Chat</button>
                     <button type="button" style="width:150px" class="btn btn-secondary mx-2" onclick="redirectTo({{ @$car->id }})" id="detailButton">Detail</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <script>
-    function openModel(id) {
-        fetchVehicleDetails(id).then(vehicle => {
+    let currentImages = [];
+    let currentIndex = 0;
+
+    async function openModel(id, ownerId) {
+        owner_id = ownerId;
+        if (owner_id == {{ !Auth()->check() ? 0 : Auth()->user()->id }}) {
+            document.getElementById('chatButton').disabled = true;
+        } else {
+            document.getElementById('chatButton').disabled = false;
+        }
+
+        try {
+            const vehicle = await fetchVehicleDetails(id);
+            console.log(vehicle);
+            console.log(vehicle.name);
             // Update modal content
             document.getElementById('modalName').textContent = vehicle.name;
             document.getElementById('modalSeller').textContent = vehicle.owner_name;
-            document.getElementById('modalImage').src = vehicle.image;
+            currentImages = vehicle.images;
+            currentIndex = 0;
 
-            // Display star rating based on the vehicle's rating
-            const rating = vehicle.rating; // Example: 4.5
+            if (currentImages.length > 0) {
+                if(currentImages.length == 1) {
+                    var nextBtn = document.getElementById('nextImage').style.display = 'none';
+                    var prevBtn = document.getElementById('prevImage').style.display = 'none';
+                } else {
+                    var nextBtn = document.getElementById('nextImage').style.display = 'inline';
+                    var prevBtn = document.getElementById('prevImage').style.display = 'inline';
+                }
+                document.getElementById('modalImage').src = currentImages[currentIndex];
+            } else {
+                var nextBtn = document.getElementById('nextImage').style.display = 'none';
+                var prevBtn = document.getElementById('prevImage').style.display = 'none';
+            }
+
+            // Display star rating
+            const rating = vehicle.rating;
             const ratingLocation = document.getElementById('rating-star');
-            ratingLocation.innerHTML = ''; // Clear existing stars
-
+            ratingLocation.innerHTML = '';
             for (let i = 1; i <= 5; i++) {
                 const star = document.createElement('i');
                 if (i <= Math.floor(rating)) {
-                    star.className = 'bi bi-star-fill'; // Full star
+                    star.className = 'bi bi-star-fill';
                 } else if (i === Math.ceil(rating) && (rating - Math.floor(rating)) >= 0.5) {
-                    star.className = 'bi bi-star-half'; // Half star
+                    star.className = 'bi bi-star-half';
                 } else {
-                    star.className = 'bi bi-star'; // Empty star
+                    star.className = 'bi bi-star';
                 }
                 ratingLocation.appendChild(star);
             }
 
-            // Update the ID of the detail button with the vehicle ID
             document.getElementById('detailButton').setAttribute('onclick', `redirectTo(${id})`);
 
-            // Show the modal
+            // Show modal
             const modal = document.getElementById('vehicleDetailModal');
-            if (modal) {
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling
-            } else {
-                console.error("Modal element not found.");
-            }
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            document.body.insertAdjacentHTML('beforeend', '<div class="modal-backdrop show"></div>');
 
-            // Add modal backdrop if not already present
-            let backdrop = document.querySelector('.modal-backdrop');
-            if (!backdrop) {
-                backdrop = document.createElement('div');
-                backdrop.className = 'modal-backdrop show';
-                document.body.appendChild(backdrop);
-            }
-        }).catch(error => {
+        } catch (error) {
             console.error("Error fetching vehicle details:", error);
-        });
+        }
     }
 
+    function changeImage(direction) {
+        currentIndex += direction;
+
+        if (currentIndex < 0) {
+            currentIndex = currentImages.length - 1; // Go to the last image
+        } else if (currentIndex >= currentImages.length) {
+            currentIndex = 0; // Loop back to the first image
+        }
+
+        document.getElementById('modalImage').src = currentImages[currentIndex];
+    }
 
     function closeModel() {
         const modal = document.getElementById('vehicleDetailModal');

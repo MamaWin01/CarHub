@@ -70,6 +70,18 @@ class MyListController extends Controller
             $totalPages = round(count($myList->get()) / 9) < 1 ? 1: round(count($myList->get()) / 9);
 
             $myList = $myList->take(9)->offset(9*($request->page-1))->get();
+
+            foreach ($myList as $key => $list) {
+                $folderPath = 'public/images/vehicles/' . Auth()->user()->id . '_' . $list->id;
+
+                if (Storage::exists($folderPath)) {
+                    $files = Storage::files($folderPath); // Get all files in the folder
+                    $list->img_count = count($files);
+                } else {
+                    $list->img_count = 0; // Folder doesn't exist
+                }
+            }
+
             return response()->json([
                 'myList' => view('mylist.list', compact('myList','filters'))->render(),
                 'totalPages' => $totalPages,
@@ -104,15 +116,17 @@ class MyListController extends Controller
             ]);
 
             // Handle photo upload
-            if ($request->hasFile('photo')) {
-                $path = $request->file('photo')->storeAs(
-                    'images/vehicles/',
-                    Auth()->user()->id.'_'.$VehicleId.'.png',
-                    'public'
-                );
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $key => $photo) {
+                    $photo->storeAs(
+                        'images/vehicles/'.Auth()->user()->id.'_'.$VehicleId,
+                        Auth()->user()->id.'_'.$VehicleId.'_'.($key+1).'.png',
+                        'public'
+                    );
+                }
             }
 
-            return back()->with('store-vehicle-success', 'Kendaraan berhasil ditambahkan');
+            return response()->json(['success' => true, 'message' => 'Kendaraan berhasil ditambahkan']);
         } catch (\Exception $e) {
             // dd($e, $e->getMessage());
             return back()->with('store-vehicle-error', $e->getMessage());
@@ -127,7 +141,7 @@ class MyListController extends Controller
             $vehicle = Vehicle::findOrFail($id);
             $vehicle->name = $request->name;
             $vehicle->condition = $request->condition;
-            $vehicle->price = str_replace('.','',$request->price);
+            $vehicle->price = str_replace('.', '', $request->price);
             $vehicle->brand = $request->brand;
             $vehicle->model = $request->model;
             $vehicle->status = $request->status;
@@ -138,14 +152,45 @@ class MyListController extends Controller
             $vehicle->colour = $request->colour;
             $vehicle->body_type = $request->body_type;
 
-            // Handle Image
-            if ($request->hasFile('photo')) {
-                Storage::delete('images/vehicles/'.Auth()->user()->id.'_'.$id.'.png',);
-                $path = $request->file('photo')->storeAs(
-                    'images/vehicles/',
-                    Auth()->user()->id.'_'.$id.'.png',
-                    'public'
-                );
+            $folderPath = 'public/images/vehicles/' . Auth()->user()->id . '_' . $id;
+            $allFiles = Storage::files($folderPath);
+
+            // Handle Existing Images
+            $existingImages = $request->existing_images ?? [];
+            $remainingFiles = [];
+
+            foreach($allFiles as $file) {
+                $relativePath = str_replace('public/', '/storage/', $file);
+                if(!in_array($relativePath, $existingImages)) {
+                    Storage::delete($file);
+                } else {
+                    $remainingFiles[] = $file;
+                }
+            }
+
+            // Rename remaining images sequentially
+            $newIndex = 1;
+            $renamedFiles = [];
+            foreach ($remainingFiles as $file) {
+                $newFileName = Auth()->user()->id . '_' . $id . '_' . $newIndex . '.png';
+                $newFilePath = $folderPath . '/' . $newFileName;
+                Storage::move($file, $newFilePath);
+                $renamedFiles[] = $newFilePath;
+                $newIndex++;
+            }
+
+            // Handle New Images
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+                    $newFileName = Auth()->user()->id . '_' . $id . '_' . $newIndex . '.png';
+                    $newImgPath = 'images/vehicles/' . Auth()->user()->id . '_' . $id;
+                    $photo->storeAs(
+                        $newImgPath,
+                        $newFileName,
+                        'public'
+                    );
+                    $newIndex++;
+                }
             }
 
             $vehicle->save();
@@ -160,8 +205,14 @@ class MyListController extends Controller
         try {
             $vehicle = Vehicle::findOrFail($id);
 
-            // Delete Image
-            Storage::delete('images/vehicles/'.Auth()->user()->id.'_'.$id.'.png',);
+            $directoryPath = 'images/vehicles/' . Auth()->user()->id . '_' . $id;
+
+            if (Storage::disk('public')->exists($directoryPath)) {
+                $files = Storage::disk('public')->allFiles($directoryPath);
+                Storage::disk('public')->delete($files);
+
+                Storage::disk('public')->deleteDirectory($directoryPath);
+            }
 
             $vehicle->delete();
 

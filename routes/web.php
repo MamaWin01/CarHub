@@ -55,6 +55,6 @@ Route::get('user/chat/channels', [ChatController::class, 'fetchChannels'])->name
 
 // myList
 Route::get('user/mylist', [MyListController::class, 'index'])->name('mylist.index');
-Route::post('user/mylist/store', [MyListController::class, 'store'])->name('mylist.store');
+Route::post('/user/mylist/store', [MyListController::class, 'store'])->name('mylist.store');
 Route::put('/vehicle/update/{id}', [MyListController::class, 'update'])->name('vehicle.update');
 Route::delete('/vehicle/delete/{id}', [MyListController::class, 'destroy'])->name('vehicle.delete');

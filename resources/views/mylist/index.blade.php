@@ -4,6 +4,42 @@
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/vehicle_list.css') }}">
+<style>
+    .horizontal-scroll-container {
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        gap: 10px;
+        max-width: 100%;
+        padding-bottom: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: #ccc transparent;
+    }
+
+    .horizontal-scroll-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .horizontal-scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .horizontal-scroll-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .horizontal-scroll-container .img-thumbnail {
+        height: 150px;
+        width: auto;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+</style>
 
 <div class="container" style="padding-top:20px">
     <div class="row">
@@ -49,29 +85,26 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addVehicleModalLabel">Tambah Kendaraan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- Error Alert -->
                 @if (session('store-vehicle-error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
                         {{ session('store-vehicle-error') }}
-                        {{-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> --}}
                     </div>
                 @endif
                 <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px !important; right: 10px !important;"></button>
 
-                <form method="POST" action="{{ route('mylist.store') }}" enctype="multipart/form-data">
+                <form id="addVehicleForm" method="POST" action="{{ route('mylist.store') }}" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Image Upload at Top -->
-                    <div class="mb-4 text-center">
-                        <label for="photo" style="cursor: pointer;">
-                            <img id="photoPreview" src="{{ asset('images/not_found.jpg') }}"
-                                class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
-                        </label>
-                        <input type="file" class="d-none" id="photo" name="photo" accept="image/*">
+                    <div class="mb-3">
+                        <label>Foto Kendaraan</label>
+                        <input type="file" id="photosInput" name="photos[]" class="form-control" accept="image/*" multiple>
+                        <div id="image-preview-container" class="horizontal-scroll-container">
+                            <!-- Images will be displayed dynamically here -->
+                        </div>
                     </div>
 
                     <!-- Form Split into Two Sides -->
@@ -173,7 +206,14 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="btn btn-dark w-100">Konfirmasi</button>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button type="submit" class="btn btn-dark w-100" id="submit-btn">
+                            Konfirmasi
+                        </button>
+                        <div id="loading-spinner-update" class="spinner-border text-primary ms-3" role="status" style="display: none;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -230,20 +270,9 @@
             }
         });
 
-        const photoInput = document.getElementById('photo');
         const photoPreview = document.getElementById('photoPreview');
         const brandSelect = document.getElementById('brand');
         const modelSelect = document.getElementById('model');
-
-        // Image Preview
-        photoInput.addEventListener('change', function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = e => photoPreview.src = e.target.result;
-                reader.readAsDataURL(file);
-            }
-        });
 
         // Dynamic Model Options
         const carModels = @json($filters['model']); // Fetch models from $filters
@@ -408,6 +437,109 @@
             }
         }, 5000);
     @endif
+
+    const imageInput = document.getElementById('photosInput');
+    const previewContainer = document.getElementById('image-preview-container');
+
+    let uploadedImages = []; // Array to store image data
+
+    // Event Listener for Image Input Change
+    imageInput.addEventListener('change', function () {
+        const files = Array.from(this.files);
+
+        files.forEach(file => {
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.classList.add('position-relative');
+                    imgContainer.style.display = 'inline-block';
+
+                    imgContainer.innerHTML = `
+                        <img src="${e.target.result}" class="img-thumbnail" style="max-width: 100%; height: 160px; object-fit: cover;">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 remove-image-btn" onclick="ImageHandle('${file.name}')"
+                        ><i class="bi bi-x"></i></button>
+                    `;
+
+                    // Add to preview container
+                    previewContainer.appendChild(imgContainer);
+
+                    // Store the image in the array
+                    uploadedImages.push(file);
+
+                    // Handle Remove Image
+                    imgContainer.querySelector('.remove-image-btn').addEventListener('click', () => {
+                        imgContainer.remove();
+                        uploadedImages = uploadedImages.filter(img => img !== file);
+                    });
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+    function ImageHandle(file) {
+        uploadedImages = uploadedImages.filter(img => img.name != file);
+    }
+
+    // Select the form, submit button, and spinner
+    const addVehicleForm = document.querySelector('form[action="{{ route('mylist.store') }}"]');
+    const submitButton = document.getElementById('submit-btn');
+    const loadingSpinnerUpdate = document.getElementById('loading-spinner-update');
+
+    // Handle Form Submission
+    addVehicleForm.addEventListener('submit', function (e) {
+        // Prevent default form submission
+        e.preventDefault();
+
+        // Show loading spinner and disable submit button
+        submitButton.disabled = true;
+        loadingSpinnerUpdate.style.display = 'inline-block';
+
+        // Prepare form data
+        let formData = new FormData(this);
+        const newFormData = new FormData();
+        for (const [key, value] of formData.entries()) {
+            // Skip keys starting with 'photos['
+            if (!key.startsWith('photos[')) {
+                newFormData.append(key, value);
+            }
+        }
+        formData = newFormData;
+
+        uploadedImages.forEach((image, index) => {
+            formData.append(`photos[${index}]`, image);
+        });
+
+        // Send AJAX request
+        fetch('{{ route('mylist.store') }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to submit form');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('a');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(`Error: ${error.message}`);
+        })
+        .finally(() => {
+            submitButton.disabled = false;
+            loadingSpinner.style.display = 'none';
+        });
+    });
 </script>
 
 @endsection

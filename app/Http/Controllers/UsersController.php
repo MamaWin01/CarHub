@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\UserId;
+use App\Models\Chat;
 use App\Services\StreamChatService;
 
 class UsersController extends Controller
@@ -85,6 +86,12 @@ class UsersController extends Controller
             Auth::login($user);
 
             $this->streamChat->createUser(strval($user->id), $request->name, $request->email);
+            Chat::Create([
+                'user_id' => $user->id,
+                'user_name' => $request->name,
+                'channel_id' => $user->id,
+                'unread_count' => 0
+            ]);
 
             return redirect('/vehicle/vehicle_list')->with('success', 'Registrasi berhasil! Selamat datang, ' . $user->name . '.');
         } catch (\Exception $e) {
