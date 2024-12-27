@@ -88,11 +88,10 @@
             </div>
             <div class="modal-body">
                 <!-- Error Alert -->
-                @if (session('store-vehicle-error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
-                        {{ session('store-vehicle-error') }}
-                    </div>
-                @endif
+                <div class="alert alert-danger alert-dismissible fade show d-none" role="alert" id="errorAlert">
+                    An error occurred. Please try again.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px !important; right: 10px !important;"></button>
 
                 <form id="addVehicleForm" method="POST" action="{{ route('mylist.store') }}" enctype="multipart/form-data">
@@ -137,7 +136,7 @@
                             </div>
                             <div class="mb-3">
                                 <label>Harga</label>
-                                <input type="text" class="form-control" id="price-input" name="price" required>
+                                <input type="text" placeholder="Rp. xxx,xxx,xxx" class="form-control" id="price-input" name="price" required>
                             </div>
                             <div class="mb-3">
                                 <label>Tahun</label>
@@ -150,6 +149,10 @@
                             <div class="mb-3">
                                 <label>Kilometer</label>
                                 <input type="text" class="form-control" id="kilometer-input" name="kilometer" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>No. Plat</label>
+                                <input type="text" placeholder="BP1234XX" class="form-control" id="noPlat-input" name="no_plat" required>
                             </div>
                         </div>
 
@@ -201,6 +204,10 @@
                                         <option value="{{ $key }}">{{ ucfirst($bodyType) }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label>No. Rangka</label>
+                                <input type="text" placeholder="" class="form-control" id="noRangka-input" name="no_rangka" max="5" required>
                             </div>
                         </div>
                     </div>
@@ -487,7 +494,7 @@
     // Select the form, submit button, and spinner
     const addVehicleForm = document.querySelector('form[action="{{ route('mylist.store') }}"]');
     const submitButton = document.getElementById('submit-btn');
-    const loadingSpinnerUpdate = document.getElementById('loading-spinner-update');
+    var loadingSpinnerUpdate = document.getElementById('loading-spinner-update');
 
     // Handle Form Submission
     addVehicleForm.addEventListener('submit', function (e) {
@@ -528,8 +535,21 @@
             return response.json();
         })
         .then(data => {
-            console.log('a');
-            location.reload();
+            console.log(data);
+            if(data.success) {
+                location.reload();
+            } else {
+                const errorAlert = document.getElementById('errorAlert');
+                if (errorAlert) {
+                    errorAlert.textContent = data.message || 'Failed to submit the form. Please try again.';
+                    errorAlert.classList.remove('d-none');
+                }
+
+                // Ensure modal remains open
+                var addVehicleModal = new bootstrap.Modal(document.getElementById('addVehicleModal'));
+                addVehicleModal.show();
+                loadingSpinnerUpdate.style.display = 'none';
+            }
         })
         .catch(error => {
             console.error('Error:', error);
@@ -537,7 +557,7 @@
         })
         .finally(() => {
             submitButton.disabled = false;
-            loadingSpinner.style.display = 'none';
+            loadingSpinnerUpdate.style.display = 'none';
         });
     });
 </script>

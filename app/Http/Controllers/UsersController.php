@@ -8,7 +8,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\UserId;
 use App\Models\Chat;
+use App\Models\VerificationCode;
+use App\Models\Config;
 use App\Services\StreamChatService;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerificationCodeMail;
 
 class UsersController extends Controller
 {
@@ -61,6 +66,7 @@ class UsersController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:user,email',
+            'code' => 'required',
             'password' => 'required|min:6|confirmed',
         ], [
             'name.required' => 'Nama wajib diisi.',
@@ -75,6 +81,15 @@ class UsersController extends Controller
         ]);
 
         try {
+            $config = Config::where('name', 'isEmailVerify')->first()->value;
+            if($config) {
+                $code = VerificationCode::where('email', $request->email)->where('code', $request->code)->first();
+                if(!$code) {
+                    return back()->withErrors([
+                        'code' => 'Kode verifikasi salah.',
+                    ])->withInput($request->except('password', 'password_confirmation'));
+                }
+            }
             // Create the user
             $user = UserId::create([
                 'name' => $request->name,
@@ -82,7 +97,6 @@ class UsersController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            // Log in the user after registration
             Auth::login($user);
 
             $this->streamChat->createUser(strval($user->id), $request->name, $request->email);
@@ -95,9 +109,6 @@ class UsersController extends Controller
 
             return redirect('/vehicle/vehicle_list')->with('success', 'Registrasi berhasil! Selamat datang, ' . $user->name . '.');
         } catch (\Exception $e) {
-            // Log the exception if necessary (optional)
-            // \Log::error('Registration Error: ' . $e->getMessage());
-
             return back()->withErrors([
                 'register' => 'Terjadi kesalahan saat melakukan registrasi. Silakan coba lagi nanti.',
             ])->withInput($request->except('password', 'password_confirmation'));
@@ -188,5 +199,25 @@ class UsersController extends Controller
         } catch (\Exception $e) {
             return back()->with('update-error', $e->getMessage());
         }
+    }
+
+    public function sendCode(Request $request)
+    {
+        $verificationCode = Str::random(6);
+
+        Mail::to($request->email)->send(new VerificationCodeMail($verificationCode));
+        $code = VerificationCode::where('email', $request->email)->first();
+        if($code) {
+            $code = VerificationCode::where('id', $code->id)->update([
+                        'code' => $verificationCode
+                    ]);
+        } else {
+            VerificationCode::create([
+                'email' => $request->email,
+                'code' => $verificationCode
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Verification code sent successfully!']);
     }
 }

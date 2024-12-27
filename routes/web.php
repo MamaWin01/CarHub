@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{UsersController, DetailVehicleController, testController,
     VehicleListController, RatingController, WishlistController, ChatController,
-    MyListController
+    MyListController, ConfigController
 };
 
 /*s
@@ -31,6 +31,7 @@ Route::post('user/login', [UsersController::class, 'login'])->name('user.login')
 Route::post('user/logout', [UsersController::class, 'logout'])->name('user.logout');
 Route::post('user/register', [UsersController::class, 'register'])->name('user.register');
 Route::put('user/update', [UsersController::class, 'update'])->name('user.update');
+Route::post('user/sendcode', [UsersController::class, 'sendCode'])->name('user.sendCode');
 
 // list kendaraan
 Route::get('vehicle/vehicle_list', [VehicleListController::class, 'index'])->name('vehicle_list.index');
@@ -58,3 +59,6 @@ Route::get('user/mylist', [MyListController::class, 'index'])->name('mylist.inde
 Route::post('/user/mylist/store', [MyListController::class, 'store'])->name('mylist.store');
 Route::put('/vehicle/update/{id}', [MyListController::class, 'update'])->name('vehicle.update');
 Route::delete('/vehicle/delete/{id}', [MyListController::class, 'destroy'])->name('vehicle.delete');
+
+//action
+Route::get('action/configVerify', [ConfigController::class, 'configVerify']);

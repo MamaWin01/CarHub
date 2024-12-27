@@ -82,7 +82,7 @@
 
     async function openModel(id, ownerId) {
         owner_id = ownerId;
-        if (owner_id == {{ !Auth()->check() ? Auth()->user()->id : 0 }}) {
+        if (owner_id == {{ Auth()->check() ? Auth()->user()->id : 0 }}) {
             document.getElementById('chatButton').disabled = true;
         } else {
             document.getElementById('chatButton').disabled = false;

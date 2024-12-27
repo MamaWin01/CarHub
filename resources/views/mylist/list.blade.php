@@ -63,6 +63,7 @@
                     'kilometer' => $car->kilometer,
                     'body_type' => $car->body_type,
                     'image_count' => $car->img_count,
+                    'no_plat' => $car->no_plat
                 ]) }}">
                 <img src="{{ file_exists(public_path($vehiclePath)) ? asset($vehiclePath) : $defaultImage }}" class="card-img-top" alt="Car Image">
                 <div class="card-body">
@@ -165,6 +166,10 @@
                             <div class="mb-3">
                                 <label>Kilometer</label>
                                 <input type="text" class="form-control" id="editKilometer" name="kilometer" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>No. Plat</label>
+                                <input type="text" placeholder="" class="form-control" id="noPlat" name="no_plat" disabled>
                             </div>
                         </div>
 
@@ -279,6 +284,7 @@
             document.getElementById('editTransmission').value = vehicleData.transmission;
             document.getElementById('editFuel').value = vehicleData.fuel_type;
             document.getElementById('editBodyType').value = vehicleData.body_type;
+            document.getElementById('noPlat').value = vehicleData.no_plat;
 
             // Update radio buttons
             document.getElementById('statusDijual').checked = vehicleData.status == 1;

@@ -104,8 +104,23 @@
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+                        <div class="input-group">
+                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
+                            <button type="button" id="sendCodeBtn" onclick="sendCode()" class="btn btn-outline-secondary" style="border: 1px solid #ced4da;">Kirim Kode</button>
+                        </div>
                         @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div class="text-danger d-none" role="alert" id="errorAlert">
+                            An error occurred. Please try again.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="code" class="form-label">Kode Verifikasi</label>
+                        <input type="text" class="form-control" id="code" name="code" value="{{ old('code') }}" required>
+                        <input type="hidden" id="verifycode" value="">
+                        @error('code')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -245,7 +260,7 @@
 
 <script>
     @if ($errors->any())
-        @if ($errors->has('name') || $errors->has('email') || $errors->has('password'))
+        @if ($errors->has('name') || $errors->has('email') || $errors->has('password') || $errors->has('code'))
             document.addEventListener("DOMContentLoaded", function() {
                 var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
                 registerModal.show();
@@ -335,5 +350,61 @@
         } else {
             window.location.href = route;
         }
+    }
+
+    function sendCode() {
+        var email = document.getElementById('email').value;
+        var sendCodeBtn = document.getElementById('sendCodeBtn');
+
+        console.log(email);
+
+        // Disable the button initially
+        sendCodeBtn.disabled = true;
+
+        // Validation for empty email
+        if (!email) {
+            console.log('No email entered');
+            const errorAlert = document.getElementById('errorAlert');
+            if (errorAlert) {
+                errorAlert.textContent = 'Masukkan email terlebih dahulu';
+                errorAlert.classList.remove('d-none');
+            }
+            sendCodeBtn.disabled = false; // Re-enable the button if validation fails
+            return;
+        } else {
+            const errorAlert = document.getElementById('errorAlert');
+            if (errorAlert) {
+                errorAlert.classList.add('d-none');
+            }
+        }
+
+        // Send request to backend
+        fetch('{{ route('user.sendCode') }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to send verification code');
+            }
+            return response.json();
+        })
+        .then(data => {
+
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan. Silakan coba lagi.');
+        })
+        .finally(() => {
+            // Ensure the button is re-enabled regardless of success or failure
+            sendCodeBtn.disabled = false;
+        });
     }
 </script>

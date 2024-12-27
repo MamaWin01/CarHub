@@ -96,6 +96,10 @@ class MyListController extends Controller
         try {
             // Validate input
             $this->checkRequest($request);
+            $exist = Vehicle::where('no_plat', $request->no_plat)->where('owner_id', Auth()->user()->id)->first();
+            if($exist) {
+                return response()->json(['success' => false, 'message' => 'Nomor plat sudah terdaftar']);
+            }
 
             // Insert data into the database
             $VehicleId = Vehicle::insertGetId([
@@ -112,7 +116,8 @@ class MyListController extends Controller
                 'fuel_type' => $request->fuel,
                 'colour' => $request->colour,
                 'kilometer' => $request->kilometer,
-                'body_type' => $request->body_type
+                'body_type' => $request->body_type,
+                'no_plat' => $request->no_plat
             ]);
 
             // Handle photo upload
@@ -129,7 +134,7 @@ class MyListController extends Controller
             return response()->json(['success' => true, 'message' => 'Kendaraan berhasil ditambahkan']);
         } catch (\Exception $e) {
             // dd($e, $e->getMessage());
-            return back()->with('store-vehicle-error', $e->getMessage());
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 
