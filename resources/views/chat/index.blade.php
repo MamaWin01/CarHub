@@ -228,7 +228,7 @@
 
 </style>
 
-<div class="container-fluid">
+<div class="container-fluid col-lg-8" style="border: 1px solid #ddd;">
     <div class="row chat-container" style="padding-bottom:60px">
         <!-- Sidebar -->
         <div class="col-md-4 chat-sidebar">
@@ -252,7 +252,7 @@
                                         <span class="unread-count">{{ $chat->unread_count }}</span>
                                     @endif
                                 </h6>
-                                <small class="text-muted">{{ $chat->last_message }}</small>
+                                <small class="text-muted">{{ ($chat->last_message ? $chat->last_message: '*Mengirim gambar') }}</small>
                             </div>
                             <small class="text-muted ms-auto"> {{ \Carbon\Carbon::parse(($chat->last_message_at), 'Asia/Jakarta')->timezone('Asia/Jakarta')->locale('id')->diffForHumans() }}</small>
                         </a>
@@ -514,7 +514,7 @@
                     </div>
                     <div>
                         <h6 class="mb-0">${chat.user_name} ${chat.unread_count > 0 ? `<span class="unread-count">${chat.unread_count}</span>` : ''}</h6>
-                        <small class="text-muted">${chat.last_message}</small>
+                        <small class="text-muted">${(chat.last_message ? chat.last_message : '*Mengirim gambar')}</small>
                     </div>
                     <small class="text-muted ms-auto">${new Date(chat.last_message_at).toLocaleTimeString('id-ID', {
                         hour: '2-digit',
