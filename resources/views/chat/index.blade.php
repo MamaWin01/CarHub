@@ -330,6 +330,11 @@
         listenForNewMessages();
 
         refreshSidebar();
+
+        window.addEventListener('beforeunload', function (e) {
+            e.preventDefault();
+            client.disconnectUser();
+        });
     })();
 
     function listenForNewMessages() {
