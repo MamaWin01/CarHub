@@ -93,6 +93,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px !important; right: 10px !important;"></button>
+                <!-- add Vehicle error message -->
+                <div id="addMessage" class="alert d-none"></div>
 
                 <form id="addVehicleForm" method="POST" action="{{ route('mylist.store') }}" enctype="multipart/form-data">
                     @csrf
@@ -234,6 +236,7 @@
     var currentPage = 1;
     var totalPages = 1;
     let loop = 0;
+    var addMessage = document.getElementById('addMessage');
 
     document.addEventListener('DOMContentLoaded', function () {
         renderPagination();
@@ -539,11 +542,9 @@
             if(data.success) {
                 location.reload();
             } else {
-                const errorAlert = document.getElementById('errorAlert');
-                if (errorAlert) {
-                    errorAlert.textContent = data.message || 'Failed to submit the form. Please try again.';
-                    errorAlert.classList.remove('d-none');
-                }
+                addMessage.className = 'alert alert-danger';
+                addMessage.textContent = data.message || 'Gagal menambah kendaraan.';
+                addMessage.classList.remove('d-none');
 
                 // Ensure modal remains open
                 var addVehicleModal = new bootstrap.Modal(document.getElementById('addVehicleModal'));

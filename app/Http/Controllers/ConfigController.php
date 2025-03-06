@@ -23,7 +23,7 @@ class ConfigController extends Controller
                 Config::where('id', $config->id)->update(['value' => $request->value]);
             }
 
-            return "have been changed = ".$request->value;
+            return $config->name." have been changed = ".$request->value;
         } else {
             return "wrong data";
         }

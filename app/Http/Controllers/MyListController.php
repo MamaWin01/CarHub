@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use DB;
 use App\Models\{Vehicle,Config,VehicleModel,Chat};
+use Illuminate\Support\Facades\Http;
 
 class MyListController extends Controller
 {
@@ -99,6 +100,25 @@ class MyListController extends Controller
             $exist = Vehicle::where('no_plat', $request->no_plat)->where('owner_id', Auth()->user()->id)->first();
             if($exist) {
                 return response()->json(['success' => false, 'message' => 'Nomor plat sudah terdaftar']);
+            }
+
+            // validasi no rangka
+            $bpVerify = Config::where('name', 'isBPVerify')->first()->value;
+            if($bpVerify) {
+                $url = "https://api.bapenda.kepriprov.go.id/infopajaknorangkaweb.php";
+
+                $response = Http::asForm()->post($url, [
+                    'noreg' => $request->no_plat,
+                    'bbn' => 0,
+                    'norangka' => $request->no_rangka
+                ]);
+
+                $verify = $response->json();
+                if(isset($verify[0])) {
+                    if(!str_contains($verify[0], 'ok')) {
+                        return response()->json(['success' => false, 'message' => 'No Plat Kendaraan tidak terdaftar di Bapenda']);
+                    }
+                }
             }
 
             // Insert data into the database

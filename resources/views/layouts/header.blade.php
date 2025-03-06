@@ -87,10 +87,6 @@
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            {{-- <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">Register</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div> --}}
             <div class="modal-body">
                 <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px !important; right: 10px !important;"></button>
                 <form method="POST" action="{{ route('user.register') }}">
@@ -149,10 +145,6 @@
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            {{-- <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div> --}}
             <div class="modal-body">
                 <button type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close" style="top: 10px !important; right: 10px !important;"></button>
                 <form method="POST" action="{{ route('user.login') }}">
@@ -191,10 +183,6 @@
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                {{-- <div class="modal-header">
-                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="top: 10px; right: 10px;"></button>
-                </div> --}}
                 @if (session('update-success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
                         {{ session('update-success') }}

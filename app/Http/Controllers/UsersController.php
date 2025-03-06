@@ -89,6 +89,8 @@ class UsersController extends Controller
                         'code' => 'Kode verifikasi salah.',
                     ])->withInput($request->except('password', 'password_confirmation'));
                 }
+
+                $code->delete();
             }
             // Create the user
             $user = UserId::create([

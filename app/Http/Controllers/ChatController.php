@@ -21,7 +21,11 @@ class ChatController extends Controller
             return redirect()->route('vehicle_list.index');
         }
 
-        $unread_count = Chat::where('user_id', Auth()->user()->id)->select('unread_count')->first()->unread_count;
+        $chat = Chat::where('user_id', Auth()->user()->id)->select('unread_count')->first();
+        if($chat)
+            $unread_count = $chat->unread_count;
+        else
+            $unread_count = 0;
 
         $userId = strval(Auth::id());
         $userName = Auth::user()->name;
