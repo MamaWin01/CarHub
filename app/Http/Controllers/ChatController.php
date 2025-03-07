@@ -66,6 +66,8 @@ class ChatController extends Controller
             ['last_message_at' => -1] // Sort by most recent message
         );
 
+        sleep(4);
+
         $message = [];
         $totalUnread = 0;
         foreach ($channels as $channel) {
@@ -178,6 +180,8 @@ class ChatController extends Controller
             ['members' => ['$in' => [$userId]]], // Ensure user ID is a string
             ['last_message_at' => -1] // Sort by most recent message
         );
+
+        sleep(4);
 
         $message = [];
         $totalUnread = 0;

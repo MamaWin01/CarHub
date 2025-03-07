@@ -10,7 +10,10 @@
         <!-- Sidebar Filters -->
         <div class="col-md-4">
             <form>
-                <div class="filter-container">
+                <button class="btn btn-dark d-md-none mb-3" type="button" onclick="hideSideBar()">
+                    ☰ Filters
+                </button>
+                <div class="filter-container" id="sideBarFilter">
                     <!-- Kondisi Kendaraan -->
                     <div class="filter-group">
                         <h5>Kondisi Kendaraan</h5>
@@ -248,6 +251,7 @@
     let jual = 1;
     let sewa = 1;
     let isProcessing = false; // Flag to prevent multiple clicks
+    let isHideSidebar = 0;
 
     document.addEventListener('DOMContentLoaded', function () {
         renderPagination();
@@ -705,6 +709,17 @@
             getCarList();
         } else {
             disableInput(kilometerInput, false);
+        }
+    }
+
+    function hideSideBar() {
+        var sidebar = document.getElementById('sideBarFilter');
+        if(isHideSidebar) {
+            sidebar.classList.remove('d-none');
+            isHideSidebar = 0;
+        } else {
+            sidebar.classList.add('d-none');
+            isHideSidebar = 1;
         }
     }
 </script>

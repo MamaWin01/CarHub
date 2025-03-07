@@ -199,6 +199,7 @@
         height: 1px;
         background-color: #ddd;
         transform: translateY(-50%);
+        z-index: -999;
     }
 
     .date-separator::after {
@@ -210,6 +211,7 @@
         height: 1px;
         background-color: #ddd;
         transform: translateY(-50%);
+        z-index: -999;
     }
 
     .unread-count {
@@ -231,7 +233,7 @@
 <div class="container-fluid col-lg-8" style="border: 1px solid #ddd;">
     <div class="row chat-container" style="padding-bottom:60px">
         <!-- Sidebar -->
-        <div class="col-md-4 chat-sidebar">
+        <div class="col-md-4 chat-sidebar" id="chatSidebar">
             <div class="list-group">
                 <div class="chat-header">
                     <h5 class="mb-0">Chats</h5>
@@ -278,6 +280,7 @@
                     <img id="chatAvatar" src="{{ asset('images/not_found.jpg')}}" alt="Avatar" class="rounded-circle" style="width: 50px; height: 50px;">
                 </div>
                 <h5 id="chatName" class="mb-0">Pilih Percakapan</h5>
+                <a id="myLink" href="#" onclick="showChatSidebar();" style="margin-left: auto">Balik</a>
             </div>
 
             <!-- Chat Messages -->
@@ -330,11 +333,6 @@
         listenForNewMessages();
 
         refreshSidebar();
-
-        window.addEventListener('beforeunload', function (e) {
-            e.preventDefault();
-            client.disconnectUser();
-        });
     })();
 
     function listenForNewMessages() {
@@ -366,6 +364,11 @@
     }
 
     async function loadChat(userId, userName, channelId, profilePicture) {
+        if ($(window).width() < 768) {
+            var chatSidebar = document.getElementById('chatSidebar');
+            chatSidebar.classList.add('d-none');
+        }
+
         const contextText = document.getElementById('contextText');
         const chatName = document.getElementById('chatName');
         const chatAvatar = document.getElementById('chatAvatar');
@@ -499,7 +502,7 @@
 
     async function refreshSidebar() {
         try {
-            const response = await fetch('{{ route('chat.getChannels') }}'); // Replace with your backend route
+            const response = await fetch('{{ route('chat.getChannels') }}');
             const channels = await response.json();
             renderSidebar(channels);
         } catch (error) {
@@ -563,6 +566,11 @@
             await channel.markRead();
             refreshSidebar();
         }
+    }
+
+    function showChatSidebar() {
+        var chatSidebar = document.getElementById('chatSidebar');
+        chatSidebar.classList.remove('d-none');
     }
 </script>
 
